@@ -7,7 +7,7 @@ const MovieSchema = new Schema({
         type: String,
         required: true
     },
-    cotegory: String,
+    category: String,
     country: String,
     year: Number,
     imdb: Number,
