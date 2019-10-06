@@ -13,7 +13,8 @@ const dbURI =
 const options = {
   reconnectTries: Number.MAX_VALUE,
   poolSize: 10,
-  useNewUrlParser: true
+  useNewUrlParser: true,
+  useUnifiedTopology: true
 };
  
 mongoose.connect(dbURI, options)
@@ -23,3 +24,6 @@ mongoose.connect(dbURI, options)
   .catch(err => {
     console.log("Error connecting Database instance due to: ", err);
   });
+
+  // router da then catch yapısını kullanmak için ekliyoruz.
+  mongoose.Promise = global.Promise;
