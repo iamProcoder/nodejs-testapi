@@ -6,11 +6,32 @@ const mongoose = require('mongoose');
 const Movie = require('../models/Movie')
 
 router.get('/', (req, res) => {
-  const movieList = Movie.find({}).sort({'year': 1}); //yıla göre küçükten büyüğe göre yapıyor. eğer büyükten küçük için olacaksa -1 verilecek
+  //const movieList = Movie.find({}).sort({'year': 1}); //yıla göre küçükten büyüğe göre yapıyor. eğer büyükten küçük için olacaksa -1 verilecek
+  const movieList = Movie.aggregate([
+    {
+      $lookup: {
+        from: 'directors',
+        localField: 'director_id',
+        foreignField: '_id',
+        as: 'director'
+      }
+    },
+    {
+      $unwind: {
+        path: '$director',
+        preserveNullAndEmptyArrays: true
+      }
+    },
+    {
+      $sort: {
+        'year': 1
+      }
+    }
+  ]); 
   movieList.then(result => {
     res.status(200).json(result);
   })
-    .catch(err => res.sendStatus(500).send({ message: err }));
+    .catch(err => res.status(500).json({ message: err }));
 });
 
 //top 10 list
@@ -19,7 +40,7 @@ router.get('/top10', (req, res) => {
   movieList.then(result => {
     res.status(200).json(result);
   })
-    .catch(err => res.sendStatus(500).send({ message: err }));
+    .catch(err => res.status(500).json({ message: err }));
 });
 
 //between
@@ -34,7 +55,7 @@ router.get('/between/:start_year/:end_year', (req, res) => {
   movieList.then(result => {
     res.status(200).json(result);
   })
-    .catch(err => res.sendStatus(500).send({ message: err }));
+    .catch(err => res.status(500).json({ message: err }));
 });
 
 router.get('/:movie_id', (req, res, next) => {
@@ -44,7 +65,7 @@ router.get('/:movie_id', (req, res, next) => {
       next({ message: 'movie not found', code: 404 });
     res.status(200).json(result);
   })
-    .catch(err => res.sendStatus(500).send({ message: err }));
+    .catch(err => res.status(500).json({ message: err }));
 });
 
 router.put('/:movie_id', (req, res, next) => {
@@ -54,7 +75,7 @@ router.put('/:movie_id', (req, res, next) => {
       next({ message: 'movie not found', code: 404 });
     res.status(200).json(result);
   })
-    .catch(err => res.sendStatus(500).send({ message: err }));
+    .catch(err => res.status(500).json({ message: err }));
 });
 
 router.delete('/:movie_id', (req, res, next) => {
@@ -69,7 +90,7 @@ router.delete('/:movie_id', (req, res, next) => {
       next({ message: 'movie not found', code: 404 });
     res.status(200).json({message: 'movie deleted'});
   })
-    .catch(err => res.sendStatus(500).send({ message: err }));
+    .catch(err => res.status(500).json({ message: err }));
 });
 
 router.post('/', (req, res) => {
@@ -101,7 +122,7 @@ router.post('/', (req, res) => {
       res.status(201).json(result);
     })
     .catch(err => {
-      res.sendStatus(500).send({ message: err });
+      res.status(500).json({ message: err });//res.sendStatus(500).send({ message: err });
     });
 
 });

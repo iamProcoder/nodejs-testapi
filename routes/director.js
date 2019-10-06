@@ -12,7 +12,7 @@ router.post('/', (req, res) => {
     res.status(201).json(result);
   })
   .catch(err => {
-    res.sendStatus(500).send({ message: err });
+    res.status(500).json({ message: err });
   });
 });
 
@@ -59,7 +59,7 @@ router.get('/', (req, res) => {
     res.status(200).json(result);
   })
   .catch(err => {
-    res.sendStatus(500).send({message: err});
+    res.status(500).json({ message: err });
   });
 });
 
@@ -111,10 +111,29 @@ router.get('/:director_id', (req, res) => {
     res.status(200).json(result);
   })
   .catch(err => {
-    res.sendStatus(500).send({message: err});
+    res.status(500).json({ message: err });
   });
 });
 
+router.put('/:director_id', (req, res, next) => {
+  const director = Director.findByIdAndUpdate(req.params.director_id, req.body, { new: true });
+  director.then(result => {
+    if (!result)
+      next({ message: 'director not found', code: 404 });
+    res.status(200).json(result);
+  })
+    .catch(err => res.status(500).json({ message: err }));
+});
+
+router.delete('/:director_id', (req, res, next) => {
+  const director = Director.remove({_id: req.params.director_id});
+  director.then(result => {
+    if (!result)
+      next({ message: 'director not found', code: 404 });
+    res.status(200).json({message: 'director deleted'});
+  })
+    .catch(err => res.status(500).json({ message: err }));
+});
 
 
 module.exports = router;
