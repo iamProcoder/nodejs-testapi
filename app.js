@@ -4,7 +4,7 @@ const favicon = require('serve-favicon');
 const logger = require('morgan');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
-const mongoose = require('mongoose');
+// const mongoose = require('mongoose');
 
 const index = require('./routes/index');
 const users = require('./routes/users');
@@ -12,13 +12,8 @@ const books = require('./routes/books');
 
 const app = express();
 
-mongoose.connect('mongodb://localhost/udemy', { useMongoClient:  true });
-mongoose.connection.on('open', () => {
-  console.log("MongoDB: Connected");
-});
-mongoose.connection.on('error', (err) => {
-  console.log("MongoDB: Error", err);
-});
+//db connection
+const db = require('./Helper/db')();
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
