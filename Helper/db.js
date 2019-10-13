@@ -14,7 +14,8 @@ const options = {
   reconnectTries: Number.MAX_VALUE,
   poolSize: 10,
   useNewUrlParser: true,
-  useUnifiedTopology: true
+  useUnifiedTopology: true,
+  useCreateIndex: true
 };
  
 mongoose.connect(dbURI, options)

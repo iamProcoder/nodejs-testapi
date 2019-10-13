@@ -21,8 +21,8 @@ router.get('/', (req, res) => {
     {
       $lookup: { //include
         from: 'movies',
-        localField: '_id',
-        foreignField: 'director_id',
+        localField: '_id', //director deki _id 
+        foreignField: 'director_id', //movie deki director_id
         as: 'movie'
       }
     },

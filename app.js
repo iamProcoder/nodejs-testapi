@@ -16,6 +16,13 @@ const books = require('./routes/books');
 
 const app = express();
 
+//config
+const config = require('./config');
+app.set('API_SECRET_KEY', config.API_SECRET_KEY);
+
+//Middleware
+const verifyToken = require('./middleware/verify-token');
+
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
@@ -29,6 +36,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', index);
+app.use('/api', verifyToken);
 app.use('/api/movie', movie);
 app.use('/api/directors', director);
 app.use('/books', books);
