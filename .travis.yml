@@ -3,6 +3,7 @@ node_js:
   - "10"
 before_install:
   - npm install
+  - npm install --dev
   - export NODE_ENV=production
 script:
   - npm run test
